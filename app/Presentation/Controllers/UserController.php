@@ -2,21 +2,21 @@
 
 namespace App\Presentation\Controllers;
 
-use App\Service\Usecases\User\LoginService;
+use App\Application\Usecases\User\ILoginUseCase;
 
 class UserController
 {
-    private $loginService;
+    private $loginUseCase;
 
-    public function __construct(LoginService $loginService)
+    public function __construct(ILoginUseCase $loginUseCase)
     {
-        $this->loginService = $loginService;
+        $this->loginUseCase = $loginUseCase;
     }
 
     public function authenticate()
     {
         if (!isset($_SESSION['permissao'])) {
-            $result = $this->loginService->login();
+            $result = $this->loginUseCase->login();
             if ($result) {
                 $_SESSION['permissao'] = true;
                 return;

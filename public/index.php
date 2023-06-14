@@ -7,9 +7,9 @@ use App\Presentation\Controllers\TodoController;
 use App\Presentation\Controllers\UserController;
 use App\Presentation\Http\HttpResponder;
 use App\Infra\Repositories\TodoRepositoryInMemory;
-use App\Service\Usecases\Todo\GetTodoListService;
-use App\Service\Usecases\Todo\DeleteTodoListService;
-use App\Service\Usecases\User\LoginService;
+use App\Application\Usecases\Todo\Get\GetTodoUseCase;
+use App\Application\Usecases\Todo\Delete\DeleteTodoUseCase;
+use App\Application\Usecases\User\LoginUseCase;
 
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $requestUri = $_SERVER['REQUEST_URI'];
@@ -36,34 +36,16 @@ function initializeControllers(): array
 {
     $todoRepository = new TodoRepositoryInMemory();
     $httpResponder = new HttpResponder();
-    $getTodoListService = new GetTodoListService($todoRepository);
-    $deleteTodoListService = new DeleteTodoListService($todoRepository);
-    $loginUseCase = new LoginService();
+    $getTodoUseCase = new GetTodoUseCase($todoRepository);
+    $deleteTodoUseCase = new DeleteTodoUseCase($todoRepository);
+    $loginUseCase = new LoginUseCase();
 
-    $controller = new TodoController($getTodoListService, $httpResponder);
-    $controllerApi = new TodoControllerApi($deleteTodoListService);
+    $controller = new TodoController($getTodoUseCase, $httpResponder);
+    $controllerApi = new TodoControllerApi($deleteTodoUseCase);
 
     $controllerUser = new UserController($loginUseCase);
 
     return [$controller, $controllerApi, $controllerUser];
-}
-
-function handleAuthentication()
-{
-    if (!isset($_SESSION['permissao'])) {
-        $loginUseCase = new LoginService();
-        $result = $loginUseCase->login();
-        if ($result) {
-            $_SESSION['permissao'] = true;
-            return;
-        }
-    }
-
-    if (!$_SESSION['permissao']) {
-        http_response_code(404);
-        echo "Sem Permissão para a aplicação";
-        die();
-    }
 }
 
 function handleRouting($requestMethod, $requestUri, $controller, $controllerApi)
@@ -77,6 +59,9 @@ function handleRouting($requestMethod, $requestUri, $controller, $controllerApi)
             }
             break;
         case '/teste':
+            if ($requestMethod === 'GET') {
+                $controller->teste();
+            }
             break;
         case preg_match('/\/api\/todo\/(\d+)\/delete/', $route, $matches) ? true : false:
             if ($requestMethod === 'POST') {

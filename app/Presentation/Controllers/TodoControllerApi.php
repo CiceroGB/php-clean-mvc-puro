@@ -4,22 +4,22 @@
 namespace App\Presentation\Controllers;
 
 
-use App\Service\Usecases\Todo\DeleteTodoListService;
+use App\Application\Usecases\Todo\Delete\IDeleteTodoUseCase;
 
 class TodoControllerApi
 {
-    private $deleteTodoListService;
+    private $deleteTodoUseCase;
 
     public function __construct(
-        DeleteTodoListService $deleteTodoListService,
+        IDeleteTodoUseCase $deleteTodoUseCase,
 
     ) {
 
-        $this->deleteTodoListService = $deleteTodoListService;
+        $this->deleteTodoUseCase = $deleteTodoUseCase;
     }
 
     public function delete(int $id)
     {
-        return  $this->deleteTodoListService->execute($id);
+        return  $this->deleteTodoUseCase->execute($id);
     }
 }

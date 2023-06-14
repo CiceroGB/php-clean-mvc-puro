@@ -4,7 +4,7 @@
 namespace App\Infra\Repositories;
 
 use App\Domain\Entities\Todo;
-use App\Domain\Repositories\ITodoRepository;
+use App\Application\Repositories\ITodoRepository;
 
 
 class TodoRepositoryInMemory implements ITodoRepository

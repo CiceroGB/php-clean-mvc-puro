@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Service\Usecases\Todo;
+namespace App\Application\Usecases\Todo\Get;
 
-use App\Domain\Repositories\ITodoRepository;
+use App\Application\Repositories\ITodoRepository;
+use App\Application\Usecases\Todo\Get\IGetTodoUseCase;
 
-class GetTodoListService
+class GetTodoUseCase implements IGetTodoUseCase
 {
     private ITodoRepository $repository;
 

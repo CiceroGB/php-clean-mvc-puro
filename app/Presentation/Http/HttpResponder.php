@@ -9,7 +9,7 @@ class HttpResponder
         extract($data);
         ob_start();
         include __DIR__ . "/../../../public/header.php";
-        include __DIR__ . "/../views/{$viewName}.php";
+        include __DIR__ . "/../views/Todo/{$viewName}.php";
         include __DIR__ . "/../../../public/footer.php";
 
         return ob_get_clean();

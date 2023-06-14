@@ -4,28 +4,35 @@
 namespace App\Presentation\Controllers;
 
 
-use App\Service\Usecases\Todo\GetTodoListService;
+use App\Application\Usecases\Todo\Get\IGetTodoUseCase;
 use App\Presentation\Http\HttpResponder;
 
 class TodoController
 {
-    private $getTodoListService;
+    private $getTodoUseCase;
     private $httpResponder;
 
     public function __construct(
-        GetTodoListService $getTodoListService,
+        IGetTodoUseCase $getTodoUseCase,
         HttpResponder $httpResponder
     ) {
 
-        $this->getTodoListService = $getTodoListService;
+        $this->getTodoUseCase = $getTodoUseCase;
 
         $this->httpResponder = $httpResponder;
     }
 
     public function index()
     {
-        $todos = $this->getTodoListService->execute();
+        $todos = $this->getTodoUseCase->execute();
         $view = $this->httpResponder->renderView('list', ['todos' => $todos]);
         return $this->httpResponder->respond($view);
     }
+
+    public function teste()
+        {
+            $view = $this->httpResponder->renderView('teste');
+            return $this->httpResponder->respond($view);
+        }
+    
 }

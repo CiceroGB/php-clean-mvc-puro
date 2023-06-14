@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Repositories;
+namespace App\Application\Repositories;
 
 use App\Domain\Entities\Todo;
 

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Service\Usecases\Todo;
+namespace App\Application\Usecases\Todo\Delete;
 
-use App\Domain\Repositories\ITodoRepository;
+use App\Application\Repositories\ITodoRepository;
+use App\Application\Usecases\Todo\Delete\IDeleteTodoUseCase;
 
-class DeleteTodoListService
+class DeleteTodoUseCase implements IDeleteTodoUseCase
 {
     private ITodoRepository $repository;
 

@@ -1,12 +1,3 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Todo List</title>
-    <!-- Inclua aqui seus arquivos CSS, JS e talvez algum framework que esteja usando -->
-</head>
-
-<body>
     <h1>Todo List</h1>
     <a href="http://localhost:8000/teste">Mudar</a>
     <?php if (empty($todos)) : ?>

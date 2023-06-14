@@ -6,9 +6,9 @@ class Todo
 {
     private int $id;
     private string $title;
-    private bool $done;
+    private int $done;
 
-    public function __construct(int $id, string $title, bool $done)
+    public function __construct(int $id, string $title, int $done)
     {
         $this->id = $id;
         $this->title = $title;
@@ -25,7 +25,7 @@ class Todo
         return $this->title;
     }
 
-    public function isDone(): bool
+    public function isDone(): int
     {
         return $this->done;
     }

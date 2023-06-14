@@ -2,10 +2,12 @@
 
 namespace App\Infra\Database;
 
+
 use PDO;
 use PDOException;
+use App\Infra\Database\ISqlServerDatabase;
 
-class SqlServerDatabase
+class SqlServerDatabase implements ISqlServerDatabase
 {
     private $conn;
     private $host;
@@ -17,8 +19,8 @@ class SqlServerDatabase
     {
         $this->host = $_ENV['DB_HOST'];
         $this->username = $_ENV['DB_USER'];
-        $this->password = $_ENV['DB_PASSWORD'];
-        $this->database = $_ENV['DB_NAME'];
+        $this->password = $_ENV['DB_PASS'];
+        $this->database = $_ENV['DB_BASE'];
 
         try {
             $this->conn = new PDO("sqlsrv:Server=$this->host;Database=$this->database", $this->username, $this->password);
@@ -36,7 +38,7 @@ class SqlServerDatabase
 
             return $stmt;
         } catch (PDOException $e) {
-            die("Query failed: " . $e->getMessage());
+            throw $e;  
         }
     }
 
@@ -47,6 +49,18 @@ class SqlServerDatabase
         // This method is kept for compatibility but it's recommended to avoid using it.
         return $this->conn->quote($string);
     }
+
+    // Adicione este método na sua classe SqlServerDatabase
+    public function prepare($sql)
+    {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            return $stmt;
+        } catch (PDOException $e) {
+            throw $e;  
+        }
+    }
+
 
     public function close()
     {

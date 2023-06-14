@@ -1,7 +1,7 @@
 <?php
 // app/Infrastructure/Repositories/TodoRepository.php
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infra\Repositories;
 
 use App\Domain\Entities\Todo;
 use App\Application\Repositories\ITodoRepository;
@@ -11,18 +11,24 @@ class TodoRepository implements ITodoRepository
 {
     private $database;
 
-    public function __construct()
+    public function __construct(SqlServerDatabase $database)
     {
-        $this->database = new SqlServerDatabase();
+        $this->database = $database;
     }
 
     public function findAll(): array
     {
-        $result = $this->database->query('SELECT * FROM todos');
-        $todos = $result->fetchAll(\PDO::FETCH_CLASS, Todo::class);
+        $result = $this->database->query('SELECT id, title, done FROM master.dbo.todo;');
+        $rows = $result->fetchAll(\PDO::FETCH_ASSOC);
+
+        $todos = [];
+        foreach ($rows as $row) {
+            $todos[] = new Todo($row['id'], $row['title'], $row['done']);
+        }
 
         return $todos;
     }
+
 
     // public function findById(int $id): ?Todo
     // {
@@ -47,7 +53,7 @@ class TodoRepository implements ITodoRepository
 
     public function delete(int $id): bool
     {
-        $stmt = $this->database->query('DELETE FROM todos WHERE id = :id');
+        $stmt = $this->database->prepare('DELETE FROM master.dbo.todo WHERE id = :id');
         $result = $stmt->execute([':id' => $id]);
 
         return $result;

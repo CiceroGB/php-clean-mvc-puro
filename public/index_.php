@@ -1,9 +1,6 @@
 <?php
 
 require_once '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
-
 
 use App\Presentation\Controllers\TodoControllerApi;
 use App\Presentation\Controllers\TodoController;
@@ -13,21 +10,17 @@ use App\Infra\Repositories\TodoRepositoryInMemory;
 use App\Application\Usecases\Todo\Get\GetTodoUseCase;
 use App\Application\Usecases\Todo\Delete\DeleteTodoUseCase;
 use App\Application\Usecases\User\LoginUseCase;
-use App\Infra\Database\SqlServerDatabase;
-use App\Infra\Repositories\TodoRepository;
-
-
 
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $requestUri = $_SERVER['REQUEST_URI'];
 
 session_start();
 
+// Inicializa o repositório, serviços e controladores
+list($controller, $controllerApi, $controllerUser) = initializeControllers();
 
 
 try {
-    // Inicializa o repositório, serviços e controladores
-    list($controller, $controllerApi, $controllerUser) = initializeControllers();
     // Verifica a autenticação
     $controllerUser->authenticate();
     // Lida com o roteamento
@@ -41,10 +34,7 @@ try {
 
 function initializeControllers(): array
 {
-    // $todoRepository = new TodoRepositoryInMemory();
-    $db = new SqlServerDatabase();
-    $todoRepository = new TodoRepository($db);
-
+    $todoRepository = new TodoRepositoryInMemory();
     $httpResponder = new HttpResponder();
     $getTodoUseCase = new GetTodoUseCase($todoRepository);
     $deleteTodoUseCase = new DeleteTodoUseCase($todoRepository);

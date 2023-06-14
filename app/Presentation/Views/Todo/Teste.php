@@ -1,4 +1,4 @@
-<button onclick="goBack()" class="btn">Voltar</button>
+<button onclick="goBack()" class="btn btn-success">Voltar</button>
 
 <script>
     function goBack() {

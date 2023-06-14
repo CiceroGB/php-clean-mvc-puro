@@ -26,7 +26,7 @@ class SqlServerDatabase implements ISqlServerDatabase
             $this->conn = new PDO("sqlsrv:Server=$this->host;Database=$this->database", $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
+            throw $e;  
         }
     }
 

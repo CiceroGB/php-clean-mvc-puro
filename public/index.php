@@ -4,6 +4,7 @@ require_once '../vendor/autoload.php';
 
 use App\Presentation\Controllers\TodoControllerApi;
 use App\Presentation\Controllers\TodoController;
+use App\Presentation\Controllers\UserController;
 use App\Presentation\Http\HttpResponder;
 use App\Infra\Repositories\TodoRepositoryInMemory;
 use App\Service\Usecases\Todo\GetTodoListService;
@@ -16,11 +17,12 @@ $requestUri = $_SERVER['REQUEST_URI'];
 session_start();
 
 // Inicializa o repositório, serviços e controladores
-list($controller, $controllerApi) = initializeControllers();
+list($controller, $controllerApi, $controllerUser) = initializeControllers();
+
 
 try {
     // Verifica a autenticação
-    handleAuthentication();
+    $controllerUser->authenticate();
     // Lida com o roteamento
     handleRouting($requestMethod, $requestUri, $controller, $controllerApi);
 } catch (Exception $e) {
@@ -36,11 +38,14 @@ function initializeControllers(): array
     $httpResponder = new HttpResponder();
     $getTodoListService = new GetTodoListService($todoRepository);
     $deleteTodoListService = new DeleteTodoListService($todoRepository);
+    $loginUseCase = new LoginService();
 
     $controller = new TodoController($getTodoListService, $httpResponder);
     $controllerApi = new TodoControllerApi($deleteTodoListService);
 
-    return [$controller, $controllerApi];
+    $controllerUser = new UserController($loginUseCase);
+
+    return [$controller, $controllerApi, $controllerUser];
 }
 
 function handleAuthentication()
